@@ -1,8 +1,8 @@
 import pygame
 import time
 import math
-
-class BothCars:
+#make sure to comment all the code 
+class both_cars:
     def __init__(self):
         pass  
 
@@ -15,8 +15,10 @@ class BothCars:
         global x, y, rotation_angle
         y += car_speed * math.cos(math.radians(rotation_angle))
         x += car_speed * math.sin(math.radians(rotation_angle))
+    
+    #should include how to stay within the boarder so both player and computer can inherant 
 
-class Player(BothCars):
+class Player(both_cars):
     def __init__(self):
         super().__init__()  # Calls the __init__ method of the parent class
         pass  
@@ -33,6 +35,10 @@ class Player(BothCars):
             self.move_forward()
         if keys[pygame.K_DOWN]:
             self.move_backward()
+
+class Computer(both_cars):
+    #figure out how to get it to move on its own 
+
 
 def size(image, factor):
     resize = pygame.transform.scale(image, (round(image.get_width() * factor), round(image.get_height() * factor)))
@@ -65,7 +71,7 @@ rotation_speed = 5
 play = True 
 rotation_angle = 0 
 
-both_cars = BothCars()
+both_cars = both_cars()
 player = Player()
 
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)),
