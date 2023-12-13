@@ -3,28 +3,29 @@ import time
 import math
 #make sure to comment all the code 
 class both_cars:
-    def __init__(self):
-        pass  
+    def __init__(self, car_speed, rotation_speed):
+        self.car_speed = car_speed
+        self.roation_speed = rotation_speed
+          
 
-    def move_forward(self):
-        global x, y, rotation_angle
+    def move_forward(self, x, y, rotation_angle):
         y -= car_speed * math.cos(math.radians(rotation_angle))
         x -= car_speed * math.sin(math.radians(rotation_angle))
 
-    def move_backward(self):
-        global x, y, rotation_angle
+    def move_backward(self, x, y, rotation_angle):
         y += car_speed * math.cos(math.radians(rotation_angle))
         x += car_speed * math.sin(math.radians(rotation_angle))
     
     #should include how to stay within the boarder so both player and computer can inherant 
 
 class Player(both_cars):
-    def __init__(self):
-        super().__init__()  # Calls the __init__ method of the parent class
-        pass  
+    def __init__(self, car_speed, rotation_speed):
+        super().__init__(car_speed, rotation_speed)  # Calls the __init__ method of the parent class
+        self.rotation_angle = 0  
     
     def keyboard_control(self):
-        global x, y, rotation_angle
+        global x, y, rotational_angle
+   
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
@@ -38,6 +39,11 @@ class Player(both_cars):
 
 class Computer(both_cars):
     #figure out how to get it to move on its own 
+    def __init__(self, car_speed, rotation_speed, path=[]):
+        super().__init__(car_speed, rotation_speed)
+        self.path = PATH 
+        self.speed = car_speed 
+        self.position = 0
 
 
 def size(image, factor):
@@ -46,6 +52,9 @@ def size(image, factor):
 
 clock = pygame.time.Clock()
 FPS = 60
+PATH = [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
+        (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)]
+
 
 GRASS = size(pygame.image.load("//Users//rachelbarume//Desktop//Inclasspractice//2140 Final Project//images//grass.png"), 2.5)
 
@@ -71,8 +80,9 @@ rotation_speed = 5
 play = True 
 rotation_angle = 0 
 
-both_cars = both_cars()
-player = Player()
+#both_cars = both_cars()
+player = Player(5,5)
+computer = Computer(5,5)
 
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)),
           (FINISH, FINISH_POS), (TRACK_BORDER, (0, 0))]
