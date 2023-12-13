@@ -2,6 +2,9 @@ import pygame
 import time
 import math
 #make sure to comment all the code 
+# make test code for like the classes and methods 
+#make many different methods to call the gui 
+#cuz you dont want to be wondering where the bug is coming form so you test different sections 
 class both_cars:
     def __init__(self, car_speed, rotation_speed):
         self.car_speed = car_speed
