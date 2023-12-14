@@ -1,53 +1,48 @@
+
 import pygame
 import time
 import math
-#make sure to comment all the code 
-# make test code for like the classes and methods 
-#make many different methods to call the gui 
-#cuz you dont want to be wondering where the bug is coming form so you test different sections 
-class both_cars:
-    def __init__(self, car_speed, rotation_speed):
-        self.car_speed = car_speed
-        self.roation_speed = rotation_speed
-          
 
-    def move_forward(self, x, y, rotation_angle):
+
+class BothCars:
+    def __init__(self, car_speed, rotation_speed, rotation_angle):
+        self.car_speed = car_speed
+        self.rotation_speed = rotation_speed  
+        self.rotation_angle = rotation_angle 
+
+
+    def move_forward(self, x, y):
         y -= car_speed * math.cos(math.radians(rotation_angle))
         x -= car_speed * math.sin(math.radians(rotation_angle))
+        return x, y
 
-    def move_backward(self, x, y, rotation_angle):
+    def move_backward(self, x, y):
         y += car_speed * math.cos(math.radians(rotation_angle))
         x += car_speed * math.sin(math.radians(rotation_angle))
-    
-    #should include how to stay within the boarder so both player and computer can inherant 
+        return x, y
 
-class Player(both_cars):
-    def __init__(self, car_speed, rotation_speed):
-        super().__init__(car_speed, rotation_speed)  # Calls the __init__ method of the parent class
-        self.rotation_angle = 0  
-    
+
+class Player(BothCars):
+    def __init__(self, x, y, rotation_angle, car_speed, rotation_speed):
+        super().__init__(car_speed, rotation_speed, rotation_angle)  # Calls the __init__ method of the parent class
+        self.x = x
+        self.y = y
+        
+
+
     def keyboard_control(self):
-        global x, y, rotational_angle
-   
         keys = pygame.key.get_pressed()
+        global x, y, rotation_angle
 
         if keys[pygame.K_RIGHT]:
             rotation_angle -= rotation_speed
-        if keys[pygame.K_LEFT]:
+        elif keys[pygame.K_LEFT]:
             rotation_angle += rotation_speed
+
         if keys[pygame.K_UP]:
-            self.move_forward()
-        if keys[pygame.K_DOWN]:
-            self.move_backward()
-
-class Computer(both_cars):
-    #figure out how to get it to move on its own 
-    def __init__(self, car_speed, rotation_speed, path=[]):
-        super().__init__(car_speed, rotation_speed)
-        self.path = PATH 
-        self.speed = car_speed 
-        self.position = 0
-
+            x, y = self.move_forward(x, y)
+        elif keys[pygame.K_DOWN]:
+            x, y = self.move_backward(x, y)
 
 def size(image, factor):
     resize = pygame.transform.scale(image, (round(image.get_width() * factor), round(image.get_height() * factor)))
@@ -55,9 +50,6 @@ def size(image, factor):
 
 clock = pygame.time.Clock()
 FPS = 60
-PATH = [(175, 119), (110, 70), (56, 133), (70, 481), (318, 731), (404, 680), (418, 521), (507, 475), (600, 551), (613, 715), (736, 713),
-        (734, 399), (611, 357), (409, 343), (433, 257), (697, 258), (738, 123), (581, 71), (303, 78), (275, 377), (176, 388), (178, 260)]
-
 
 GRASS = size(pygame.image.load("//Users//rachelbarume//Desktop//Inclasspractice//2140 Final Project//images//grass.png"), 2.5)
 
@@ -71,31 +63,40 @@ WHITE_CAR = size(pygame.image.load("//Users//rachelbarume//Desktop//Inclasspract
 FINISH = pygame.image.load("//Users//rachelbarume//Desktop//Inclasspractice//2140 Final Project//images//finish.png")
 FINISH_POS= (40, 250)
 
+
+
 WIDTH, HEIGHT = TRACK.get_width(), TRACK.get_height()
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Begin the Race!")
+
+pygame.font.init()
+
 
 x = 170
 y = 170
 car_speed = 5
 rotation_speed = 5  
-
-play = True 
 rotation_angle = 0 
 
-#both_cars = both_cars()
-player = Player(5,5)
-computer = Computer(5,5)
+player = Player(x, y, rotation_angle, 5, 5)
 
 images = [(GRASS, (0, 0)), (TRACK, (0, 0)),
           (FINISH, FINISH_POS), (TRACK_BORDER, (0, 0))]
 
+def draw_text(text, color, x, y):
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(center=(x, y))
+    WIN.blit(text_surface, text_rect)
+
+   
+
+
+play = True 
 while play:
     pygame.display.update()
 
     clock.tick(FPS)
-    
-    # Update the rotation angle to be within 0 to 360 degrees
+
     rotation_angle %= 360
 
     for img, pos in images:
@@ -104,7 +105,7 @@ while play:
     player_img = pygame.transform.rotate(RED_CAR, rotation_angle)
     player_rect = player_img.get_rect(center=(x, y))
     WIN.blit(player_img, player_rect.topleft)
-    
+
     player.keyboard_control()
 
     for event in pygame.event.get():
@@ -112,6 +113,5 @@ while play:
             play = False
             break 
 
-    pygame.display.flip()
-
+    
 pygame.quit()
